@@ -1,0 +1,9 @@
+{
+  "name": "react-native-web-cache",
+  "version": "0.1.0",
+  "description": "An LRU cache built with React Native in mind",
+  "main": "index.ts",
+  "repository": "https://github.com/hphothong/react-native-web-cache.git",
+  "author": "hphothong <hphothong@gmail.com>",
+  "license": "MIT"
+}
