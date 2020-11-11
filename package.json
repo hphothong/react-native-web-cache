@@ -5,5 +5,11 @@
   "main": "index.ts",
   "repository": "https://github.com/hphothong/react-native-web-cache.git",
   "author": "hphothong <hphothong@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^4.0.5"
+  }
 }
