@@ -7,39 +7,51 @@ export class MockCacheStore implements ICacheStore {
     this.cache = {};
   }
 
-  public getItem(key: string): string | null {
-    return this.cache[key] ?? null;
+  public getItem(key: string): Promise<string | null> {
+    return new Promise((resolve) => {
+      resolve(this.cache[key] ?? null);
+    });
   }
 
-  public setItem(key: string, value: string): void {
-    this.cache[key] = value;
+  public setItem(key: string, value: string): Promise<void> {
+    return new Promise((resolve) => {
+      this.cache[key] = value;
+      resolve();
+    });
   }
 
-  public removeItem(key: string): void {
-    delete this.cache[key];
-  }
-
-  public getAllKeys(): string[] {
-    return Object.keys(this.cache);
-  }
-
-  public multiGet(keys: string[]): Array<[string, string]> {
-    const results: Array<[string, string]> = [];
-    for (const key in keys) {
-      results.push([key, this.cache[key] ?? null]);
-    }
-    return results;
-  }
-
-  public multiSet(keyValuePairs: Array<[string, string]>): void {
-    for (const tuple in keyValuePairs) {
-      this.cache[tuple[0]] = tuple[1];
-    }
-  }
-
-  public multiRemove(keys: string[]): void {
-    for (const key in keys) {
+  public removeItem(key: string): Promise<void> {
+    return new Promise((resolve) => {
       delete this.cache[key];
-    }
+      resolve();
+    });
+  }
+
+  public getAllKeys(): Promise<Array<string>> {
+    return new Promise((resolve) => {
+      resolve(Object.keys(this.cache));
+    });
+  }
+
+  public multiGet(keys: string[]): Promise<Array<[string, string]>> {
+    return new Promise((resolve) => {
+      const results: Array<[string, string]> = [];
+      keys.forEach((key: string) => results.push([key, this.cache[key] ?? null]));
+      resolve(results);
+    });
+  }
+
+  public multiSet(keyValuePairs: Array<[string, string]>): Promise<void> {
+    return new Promise((resolve) => {
+      keyValuePairs.forEach((tuple: [string, string]) => (this.cache[tuple[0]] = tuple[1]));
+      resolve();
+    });
+  }
+
+  public multiRemove(keys: string[]): Promise<void> {
+    return new Promise((resolve) => {
+      keys.forEach((key: string) => delete this.cache[key]);
+      resolve();
+    });
   }
 }

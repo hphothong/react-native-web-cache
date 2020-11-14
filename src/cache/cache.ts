@@ -55,9 +55,17 @@ export class Cache implements ICache {
   private async addEntry(entry: string): Promise<void> {
     const entries: Array<string> = await this.getEntries();
     entries.push(entry);
+
     if (entries.length > this.capacity) {
-      entries.splice(0, entries.length - this.capacity);
+      const entriesToRemoveCount: number = entries.length - this.capacity;
+      const entriesToRemove: Array<string> = entries.splice(0, entriesToRemoveCount);
+
+      const entryRemovals: Array<Promise<void>> = [];
+      entriesToRemove.forEach((entry: string) => entryRemovals.push(this.store.removeItem(entry)));
+
+      await Promise.all(entryRemovals);
     }
+
     return this.setEntries(entries);
   }
 
