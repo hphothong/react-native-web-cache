@@ -70,7 +70,6 @@ describe("when setting an item in the cache", () => {
     await sut.setAsync(key, `${key}-expected`);
 
     const allKeys: Array<string> = await mockStore.getAllKeys();
-    console.log(allKeys);
     const actualKeys: Array<string> = allKeys.filter((key: string): boolean => key !== entriesKey);
     const allValues: Array<[string, string]> = await mockStore.multiGet(actualKeys);
     const actualValues: Array<string> = allValues.map((tuple: [string, string]): string => JSON.parse(tuple[1]).value);

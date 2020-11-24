@@ -28,12 +28,22 @@ export class Cache implements ICache {
 
     const entry: ICacheEntry<T> = JSON.parse(serializedEntry);
     if (entry.expiration && entry.expiration < new Date()) {
-      await this.remove;
+      const removePromise: Promise<void> = this.removeAsync(key);
+      const removeEntryPromise: Promise<void> = this.removeEntryAsync(cacheKey);
+      await Promise.all([removePromise, removeEntryPromise]);
+      return null;
     }
 
-    await this.updateEntry(cacheKey);
-    await this.setAsync(cacheKey, entry.value);
+    const updatePromise: Promise<void> = this.updateEntryAsync(cacheKey);
+    const setPromise: Promise<void> = this.setAsync(cacheKey, entry.value);
+    await Promise.all([updatePromise, setPromise]);
+
     return entry.value;
+  }
+
+  public async removeAsync(key: string): Promise<void> {
+    const cacheKey: string = this.convert(key).toCacheKey();
+    return this.store.removeItem(cacheKey);
   }
 
   public async setAsync<T>(key: string, value: T): Promise<void> {
@@ -47,22 +57,22 @@ export class Cache implements ICache {
 
     const cacheEntry: ICacheEntry<T> = { value, expiration };
     await this.store.setItem(cacheKey, JSON.stringify(cacheEntry));
-    return this.addEntry(cacheKey);
+    return this.addEntryAsync(cacheKey);
   }
 
-  private async getEntries(): Promise<Array<string>> {
+  private async getEntriesAsync(): Promise<Array<string>> {
     const cacheKey: string = this.convert(this.entriesKey).toCacheKey();
     const entries: string | null = await this.store.getItem(cacheKey);
     return entries === null ? [] : JSON.parse(entries);
   }
 
-  private async setEntries(entries: Array<string>): Promise<void> {
+  private async setEntriesAsync(entries: Array<string>): Promise<void> {
     const cacheKey: string = this.convert(this.entriesKey).toCacheKey();
     return this.store.setItem(cacheKey, JSON.stringify(entries));
   }
 
-  private async addEntry(entry: string): Promise<void> {
-    let entries: Array<string> = await this.getEntries();
+  private async addEntryAsync(entry: string): Promise<void> {
+    let entries: Array<string> = await this.getEntriesAsync();
     entries = entries.filter((value: string): boolean => value !== entry);
     entries.push(entry);
 
@@ -76,14 +86,20 @@ export class Cache implements ICache {
       await Promise.all(entryRemovals);
     }
 
-    return this.setEntries(entries);
+    return this.setEntriesAsync(entries);
   }
 
-  private async updateEntry(key: string): Promise<void> {
-    const entries: Array<string> = await this.getEntries();
-    const updatedEntries: Array<string> = entries.filter((entryKey: string): boolean => entryKey !== key);
-    updatedEntries.push(key);
-    return this.setEntries(updatedEntries);
+  private async removeEntryAsync(key: string): Promise<void> {
+    let entries: Array<string> = await this.getEntriesAsync();
+    entries = entries.filter((entryKey: string): boolean => entryKey !== key);
+    return this.setEntriesAsync(entries);
+  }
+
+  private async updateEntryAsync(key: string): Promise<void> {
+    let entries: Array<string> = await this.getEntriesAsync();
+    entries = entries.filter((entryKey: string): boolean => entryKey !== key);
+    entries.push(key);
+    return this.setEntriesAsync(entries);
   }
 
   private convert(value: string) {
