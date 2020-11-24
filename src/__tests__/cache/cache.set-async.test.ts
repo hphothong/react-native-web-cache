@@ -1,6 +1,5 @@
-import { Cache } from "../../cache";
+import { Cache, MemoryCacheStore } from "../../cache";
 import { ICache, ICacheOptions, ICacheStore } from "../../interfaces";
-import { MockCacheStore } from "../../__mocks__/mock-cache-store";
 
 describe("when setting an item in the cache", () => {
   const key = "cache_key";
@@ -10,7 +9,7 @@ describe("when setting an item in the cache", () => {
   let mockStore: ICacheStore;
 
   beforeEach(() => {
-    mockStore = new MockCacheStore();
+    mockStore = new MemoryCacheStore();
     const cacheOptions: ICacheOptions = {
       capacity: 1,
       store: mockStore,
@@ -56,6 +55,22 @@ describe("when setting an item in the cache", () => {
     await sut.setAsync(key, key);
 
     const allKeys: Array<string> = await mockStore.getAllKeys();
+    const actualKeys: Array<string> = allKeys.filter((key: string): boolean => key !== entriesKey);
+    const allValues: Array<[string, string]> = await mockStore.multiGet(actualKeys);
+    const actualValues: Array<string> = allValues.map((tuple: [string, string]): string => JSON.parse(tuple[1]).value);
+    expect(actualKeys).toStrictEqual(expectedKeys);
+    expect(actualValues).toStrictEqual(expectedValues);
+  });
+
+  it("should replace the cache entry if the key already exists", async () => {
+    const expectedKeys: Array<string> = [key];
+    const expectedValues: Array<string> = [`${key}-expected`];
+
+    await sut.setAsync(key, key);
+    await sut.setAsync(key, `${key}-expected`);
+
+    const allKeys: Array<string> = await mockStore.getAllKeys();
+    console.log(allKeys);
     const actualKeys: Array<string> = allKeys.filter((key: string): boolean => key !== entriesKey);
     const allValues: Array<[string, string]> = await mockStore.multiGet(actualKeys);
     const actualValues: Array<string> = allValues.map((tuple: [string, string]): string => JSON.parse(tuple[1]).value);

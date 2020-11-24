@@ -1,4 +1,5 @@
 import { ICache, ICacheEntry, ICacheOptions, ICacheStore } from "../interfaces";
+import { MemoryCacheStore } from "./memory-cache-store";
 
 const DEFAULT_ENTRIES_KEY = "__CACHE_KEY__";
 
@@ -11,7 +12,7 @@ export class Cache implements ICache {
 
   public constructor({ capacity, store, ttl, namespace, entriesKey }: ICacheOptions) {
     this.capacity = capacity;
-    this.store = store;
+    this.store = store ?? new MemoryCacheStore();
     this.ttl = ttl;
     this.namespace = namespace;
     this.entriesKey = entriesKey ?? DEFAULT_ENTRIES_KEY;
@@ -24,7 +25,15 @@ export class Cache implements ICache {
     if (serializedEntry === null) {
       return null;
     }
-    return null;
+
+    const entry: ICacheEntry<T> = JSON.parse(serializedEntry);
+    if (entry.expiration && entry.expiration < new Date()) {
+      await this.remove;
+    }
+
+    await this.updateEntry(cacheKey);
+    await this.setAsync(cacheKey, entry.value);
+    return entry.value;
   }
 
   public async setAsync<T>(key: string, value: T): Promise<void> {
@@ -53,7 +62,8 @@ export class Cache implements ICache {
   }
 
   private async addEntry(entry: string): Promise<void> {
-    const entries: Array<string> = await this.getEntries();
+    let entries: Array<string> = await this.getEntries();
+    entries = entries.filter((value: string): boolean => value !== entry);
     entries.push(entry);
 
     if (entries.length > this.capacity) {

@@ -1,7 +1,7 @@
 import { ICacheStore } from "../interfaces";
 
-export class MockCacheStore implements ICacheStore {
-  private cache: { [key: string]: string };
+export class MemoryCacheStore implements ICacheStore {
+  private readonly cache: { [key: string]: string };
 
   public constructor() {
     this.cache = {};
@@ -36,7 +36,12 @@ export class MockCacheStore implements ICacheStore {
   public multiGet(keys: string[]): Promise<Array<[string, string]>> {
     return new Promise((resolve) => {
       const results: Array<[string, string]> = [];
-      keys.forEach((key: string) => results.push([key, this.cache[key] ?? null]));
+      keys.forEach((key: string) => {
+        const value: string | undefined = this.cache[key];
+        if (value) {
+          results.push([key, value]);
+        }
+      });
       resolve(results);
     });
   }

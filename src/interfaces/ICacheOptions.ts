@@ -20,7 +20,7 @@ export interface ICacheOptions {
   /**
    * The store that will be used for the cache.
    */
-  store: ICacheStore;
+  store?: ICacheStore;
 
   /**
    * The key used to access the cache LRU list of cache keys. This key will be appended to the namespace if one is provided.
