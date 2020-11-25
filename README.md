@@ -1,6 +1,7 @@
 # react-native-web-cache
 
 [![Build Status](https://travis-ci.com/hphothong/react-native-web-cache.svg?branch=main)](https://travis-ci.com/hphothong/react-native-web-cache)
+[![Coverage Status](https://coveralls.io/repos/github/hphothong/react-native-web-cache/badge.svg?branch=main)](https://coveralls.io/github/hphothong/react-native-web-cache?branch=main)
 
 ## Installation
 

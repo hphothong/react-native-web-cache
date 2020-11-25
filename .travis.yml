@@ -9,4 +9,4 @@ install:
 script:
   - yarn check:type
   - yarn lint
-  - yarn test
+  - yarn cover
