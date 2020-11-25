@@ -1,2 +1,12 @@
-# Library Files
-lib/
+# Source Files
+src/
+
+# Development
+node_modules/
+coverage/
+.eslintrc.json
+.gitignore
+.prettierrc.json
+babel.config.js
+jest.config.js
+tsconfig.json
