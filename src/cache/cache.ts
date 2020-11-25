@@ -51,6 +51,11 @@ export class Cache implements ICache {
     return this.store.removeItem(cacheKey);
   }
 
+  public async removeAllAsync(): Promise<void> {
+    const storeKeys: Array<string> = await this.store.getAllKeys();
+    return this.store.multiRemove(storeKeys);
+  }
+
   public async setAsync<T>(key: string, value: T): Promise<void> {
     const cacheKey: string = this.convert(key).toCacheKey();
 
