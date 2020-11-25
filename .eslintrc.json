@@ -7,5 +7,6 @@
   "extends": ["plugin:@typescript-eslint/recommended", "prettier/@typescript-eslint", "plugin:prettier/recommended"],
   "rules": {
     "prettier/prettier": "error"
-  }
+  },
+  "ignorePatterns": ["coverage/", "node_modules/", "lib/"]
 }

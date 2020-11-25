@@ -16,7 +16,10 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint .",
+    "fix:lint": "eslint . --fix",
+    "check:type": "tsc --noEmit"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",
