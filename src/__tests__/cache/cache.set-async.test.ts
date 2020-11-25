@@ -4,7 +4,7 @@ import { ICache, ICacheOptions, ICacheStore } from "../../interfaces";
 describe("when setting an item in the cache", () => {
   const key = "cache_key";
   const entriesKey = "cache_entries_key";
-  const SECONDS_IN_HOUR = 3600;
+  const MILLIS_IN_HOUR = 1000 * 60 * 60;
   let sut: ICache;
   let mockStore: ICacheStore;
 
@@ -13,7 +13,7 @@ describe("when setting an item in the cache", () => {
     const cacheOptions: ICacheOptions = {
       capacity: 1,
       store: mockStore,
-      ttl: SECONDS_IN_HOUR,
+      ttl: MILLIS_IN_HOUR,
       entriesKey,
     };
     sut = new Cache(cacheOptions);
@@ -29,13 +29,12 @@ describe("when setting an item in the cache", () => {
   });
 
   it("should set expiration correctly", async () => {
-    const expected: Date = new Date();
-    expected.setSeconds(expected.getSeconds() + SECONDS_IN_HOUR);
+    const expected: number = new Date().getTime() + MILLIS_IN_HOUR;
 
     await sut.setAsync(key, "");
 
-    const actual: Date = new Date(JSON.parse(await mockStore.getItem(key)).expiration);
-    expect(actual.getTime() - expected.getTime()).toBeCloseTo(0);
+    const actual: number = JSON.parse(await mockStore.getItem(key)).expiration;
+    expect(actual - expected).toBeCloseTo(0);
   });
 
   it("should add the key to the cache entries", async () => {

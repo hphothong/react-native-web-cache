@@ -27,4 +27,21 @@ describe("when getting a value from the cache", () => {
 
     expect(actual).toBe(expected);
   });
+
+  it("should return null when key does not exist", async () => {
+    const actual = await sut.getAsync(key);
+
+    expect(actual).toBeNull();
+  });
+});
+
+it("should return null when the cache entry is expired", async () => {
+  const sut: ICache = new Cache({ capacity: 1, namespace: "low-ttl", ttl: 1 });
+  const key = "key";
+
+  await sut.setAsync(key, key);
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+  const actual = await sut.getAsync<string>(key);
+
+  expect(actual).toBeNull();
 });

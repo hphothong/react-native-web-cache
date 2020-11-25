@@ -7,7 +7,7 @@ export interface ICacheOptions {
   capacity: number;
 
   /**
-   * The number of seconds that the cache entry is valid (Time-To-Live).
+   * The number of milliseconds that the cache entry is valid (Time-To-Live).
    * If the TTL value is not provided, or is set to undefined, then the cache entries will never expire.
    */
   ttl?: number;

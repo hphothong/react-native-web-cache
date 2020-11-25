@@ -1,8 +1,8 @@
 export interface ICacheEntry<T> {
   /**
-   * The date that the cache value will expire.
+   * The time value in milliseconds
    */
-  expiration: Date | undefined;
+  expiration: number | undefined;
 
   /**
    * The value to add to the cache.

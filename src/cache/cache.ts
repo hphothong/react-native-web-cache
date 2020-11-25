@@ -27,7 +27,7 @@ export class Cache implements ICache {
     }
 
     const entry: ICacheEntry<T> = JSON.parse(serializedEntry);
-    if (entry.expiration && entry.expiration < new Date()) {
+    if (entry.expiration && entry.expiration < new Date().getTime()) {
       const removePromise: Promise<void> = this.removeAsync(key);
       const removeEntryPromise: Promise<void> = this.removeEntryAsync(cacheKey);
       await Promise.all([removePromise, removeEntryPromise]);
@@ -49,10 +49,9 @@ export class Cache implements ICache {
   public async setAsync<T>(key: string, value: T): Promise<void> {
     const cacheKey: string = this.convert(key).toCacheKey();
 
-    let expiration: Date | undefined;
+    let expiration: number | undefined;
     if (this.ttl) {
-      expiration = new Date();
-      expiration.setSeconds(expiration.getSeconds() + this.ttl);
+      expiration = new Date().getTime() + this.ttl;
     }
 
     const cacheEntry: ICacheEntry<T> = { value, expiration };
