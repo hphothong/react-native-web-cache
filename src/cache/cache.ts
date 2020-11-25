@@ -104,7 +104,6 @@ export class Cache implements ICache {
   private convert(value: string) {
     return {
       toCacheKey: (): string => (this.namespace ? `${this.namespace}:${value}` : value),
-      toKey: (): string => value.replace(`${this.namespace}:`, ""),
     };
   }
 }

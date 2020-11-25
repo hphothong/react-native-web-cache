@@ -76,3 +76,13 @@ describe("when setting an item in the cache", () => {
     expect(actualValues).toStrictEqual(expectedValues);
   });
 });
+
+it("should correctly set value if no ttl is provided", async () => {
+  const sut: ICache = new Cache({ capacity: 1 });
+  const key = "key";
+
+  await sut.setAsync(key, key);
+  const actual: string = await sut.getAsync<string>(key);
+
+  expect(actual).not.toBeNull();
+});
