@@ -6,6 +6,13 @@
   "types": "./lib/index.d.ts",
   "repository": "https://github.com/hphothong/react-native-web-cache.git",
   "author": "Hayden Phothong <hphothong@gmail.com>",
+  "keywords": [
+    "react",
+    "react-native",
+    "cache",
+    "context",
+    "request"
+  ],
   "license": "MIT",
   "scripts": {
     "build": "tsc",
