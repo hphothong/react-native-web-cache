@@ -4,6 +4,7 @@ src/
 # Development
 node_modules/
 coverage/
+tests/
 .eslintrc.json
 .gitignore
 .prettierrc.json
