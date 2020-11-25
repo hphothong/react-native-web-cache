@@ -33,6 +33,17 @@ describe("when getting a value from the cache", () => {
 
     expect(actual).toBeNull();
   });
+
+  it("should call data fallback function when key does not exist", async () => {
+    const expected = 10;
+    const dataFallback = (): Promise<number> => new Promise((resolve) => resolve(expected));
+
+    const actual: number = await sut.getAsync<number>(key, dataFallback);
+    const actualFetched: number = await sut.getAsync<number>(key);
+
+    expect(actual).toBe(expected);
+    expect(actualFetched).toBe(expected);
+  });
 });
 
 it("should return null when the cache entry is expired", async () => {

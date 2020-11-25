@@ -18,11 +18,16 @@ export class Cache implements ICache {
     this.entriesKey = entriesKey ?? DEFAULT_ENTRIES_KEY;
   }
 
-  public async getAsync<T>(key: string): Promise<T | null> {
+  public async getAsync<T>(key: string, dataFallback?: () => Promise<T>): Promise<T | null> {
     const cacheKey: string = this.convert(key).toCacheKey();
     const serializedEntry: string | null = await this.store.getItem(cacheKey);
 
     if (serializedEntry === null) {
+      if (dataFallback) {
+        const data: T = await dataFallback();
+        await this.setAsync(key, data);
+        return data;
+      }
       return null;
     }
 
