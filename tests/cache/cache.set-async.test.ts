@@ -1,5 +1,5 @@
-import { Cache, MemoryCacheStore } from "../../cache";
-import { ICache, ICacheOptions, ICacheStore } from "../../interfaces";
+import { Cache, MemoryCacheStore } from "../../src/cache";
+import { ICache, ICacheOptions, ICacheStore } from "../../src/interfaces";
 
 describe("when setting an item in the cache", () => {
   const key = "cache_key";
