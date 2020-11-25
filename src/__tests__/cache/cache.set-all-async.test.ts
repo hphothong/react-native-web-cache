@@ -21,16 +21,16 @@ describe("when setting a list of values from the cache", () => {
 
   it("should successfully set all keys' values", async () => {
     const cacheKeys: Array<string> = [];
-    const tuples: Array<[string, number]> = [];
+    const expected: { [cacheKey: string]: number } = {};
     for (let i = 0; i < 2; i++) {
       const cacheKey = `${key}-${i}`;
       cacheKeys.push(cacheKey);
-      tuples.push([cacheKey, i]);
+      expected[cacheKey] = i;
     }
 
-    await sut.setAllAsync(tuples);
-    const actual: Array<[string, number]> = await sut.getAllAsync(cacheKeys);
+    await sut.setAllAsync(expected);
+    const actual: { [cacheKey: string]: number } = await sut.getAllAsync(cacheKeys);
 
-    expect(actual).toStrictEqual(tuples);
+    expect(actual).toStrictEqual(expected);
   });
 });

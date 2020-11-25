@@ -18,10 +18,13 @@ export class Cache implements ICache {
     this.entriesKey = entriesKey ?? DEFAULT_ENTRIES_KEY;
   }
 
-  public async getAllAsync<T>(keys: Array<string>): Promise<Array<[string, T | null]>> {
+  public async getAllAsync<T>(keys: Array<string>): Promise<{ [cacheKey: string]: T | null }> {
     const getPromises = keys.map((key: string): Promise<T | null> => this.getAsync(key));
     const values: Array<T | null> = await Promise.all(getPromises);
-    return keys.map((key: string, index: number): [string, T | null] => [key, values[index]]);
+    return keys.reduce((result: { [cacheKey: string]: T | null }, key: string, index: number) => {
+      result[key] = values[index];
+      return result;
+    }, {});
   }
 
   public async getAsync<T>(key: string, dataFallback?: () => Promise<T>): Promise<T | null> {
@@ -62,8 +65,10 @@ export class Cache implements ICache {
     return this.store.multiRemove(storeKeys);
   }
 
-  public async setAllAsync<T>(tuples: Array<[string, T]>): Promise<void> {
-    const setPromises: Array<Promise<void>> = tuples.map((tuple: [string, T]) => this.setAsync(tuple[0], tuple[1]));
+  public async setAllAsync<T>(values: { [cacheKey: string]: T }): Promise<void> {
+    const setPromises: Array<Promise<void>> = Object.entries(values).map(([key, value]: [string, T]) =>
+      this.setAsync(key, value),
+    );
     await Promise.all(setPromises);
   }
 

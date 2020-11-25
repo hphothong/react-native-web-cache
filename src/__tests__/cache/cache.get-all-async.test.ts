@@ -21,15 +21,15 @@ describe("when getting a list of values from the cache", () => {
 
   it("should successfully retrieve all keys' values", async () => {
     const cacheKeys: Array<string> = [];
-    const expected: Array<[string, number]> = [];
+    const expected: { [cacheKey: string]: number } = {};
     for (let i = 0; i < 2; i++) {
       const cacheKey = `${key}-${i}`;
       cacheKeys.push(cacheKey);
-      expected.push([cacheKey, i]);
+      expected[cacheKey] = i;
       await sut.setAsync(cacheKey, i);
     }
 
-    const actual: Array<[string, number]> = await sut.getAllAsync(cacheKeys);
+    const actual: { [cacheKey: string]: number } = await sut.getAllAsync(cacheKeys);
 
     expect(actual).toStrictEqual(expected);
   });
