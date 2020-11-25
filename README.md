@@ -1,10 +1,24 @@
 # react-native-web-cache
 
+[![Build Status](https://travis-ci.com/hphothong/react-native-web-cache.svg?branch=main)](https://travis-ci.com/hphothong/react-native-web-cache)
+
 ## Installation
+
+### NPM
 
 ```sh
 npm install --save react-native-web-cache
+```
+
+### Yarn
+
+```sh
 yarn add react-native-web-cache
+```
+
+### Bower
+
+```sh
 bower install --save react-native-web-cache
 ```
 
