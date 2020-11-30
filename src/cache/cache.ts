@@ -27,6 +27,8 @@ export class Cache implements ICache {
     }, {});
   }
 
+  public async getAsync<T>(key: string): Promise<T | null>;
+  public async getAsync<T>(key: string, dataFallback: () => Promise<T>): Promise<T>;
   public async getAsync<T>(key: string, dataFallback?: () => Promise<T>): Promise<T | null> {
     const cacheKey: string = this.convert(key).toCacheKey();
     const serializedEntry: string | null = await this.store.getItem(cacheKey);
