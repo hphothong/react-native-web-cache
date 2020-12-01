@@ -1,4 +1,4 @@
-import { ICacheStore } from "interfaces";
+import { ICacheStore } from "../interfaces";
 
 export class MemoryCacheStore implements ICacheStore {
   private readonly cache: { [key: string]: string };

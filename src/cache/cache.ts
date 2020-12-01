@@ -1,4 +1,4 @@
-import { ICache, ICacheEntry, ICacheOptions, ICacheStore } from "interfaces";
+import { ICache, ICacheEntry, ICacheOptions, ICacheStore } from "../interfaces";
 import { MemoryCacheStore } from "./memory-cache-store";
 
 const DEFAULT_ENTRIES_KEY = "__CACHE_KEY__";
