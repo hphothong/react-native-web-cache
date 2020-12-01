@@ -1,13 +1,19 @@
 export interface ICache {
   /**
    * Retrieve the value corresponding to the key provided. If there is no value
+   * that corresponds to the key provided, then the result will be null.
+   * @param key the cache key to fetch
+   */
+  getAsync<T>(key: string): Promise<T | null>;
+
+  /**
+   * Retrieve the value corresponding to the key provided. If there is no value
    * that corresponds to the key provided, then the dataFallback function will
-   * be called to populate the cache. If the dataFallback function is not
-   * provided, then the result will be null.
+   * be called to populate the cache.
    * @param key the cache key to fetch
    * @param dataFallback the callback used to populate the cache if the key does not exist
    */
-  getAsync<T>(key: string, dataFallback?: () => Promise<T>): Promise<T | null>;
+  getAsync<T>(key: string, dataFallback: () => Promise<T>): Promise<T>;
 
   /**
    * Retrieve all of the cache values for the keys provided.
